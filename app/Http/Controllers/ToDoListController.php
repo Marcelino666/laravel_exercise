@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+use App\Models\ToDoList;
+
 class ToDoListController extends Controller
 {
     /**
@@ -14,7 +16,7 @@ class ToDoListController extends Controller
      */
     public function index()
     {
-        $todolist = DB::table('todolist')->get();
+        $todolist = ToDoList::all();
         return view('todoList', ['todolist' => $todolist]);
     }
 
@@ -36,7 +38,16 @@ class ToDoListController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'task' => 'required'
+        ]);
+
+        $todolist = new ToDoList;
+        $todolist->task = $request->task;
+        $todolist->status = 1;
+        $todolist->save();
+
+        return redirect('/todoList')->with('pesan', 'New task added successfully!');
     }
 
     /**
@@ -47,7 +58,7 @@ class ToDoListController extends Controller
      */
     public function show($id)
     {
-        //
+        //return $id;
     }
 
     /**
@@ -58,7 +69,7 @@ class ToDoListController extends Controller
      */
     public function edit($id)
     {
-        //
+        
     }
 
     /**
@@ -68,9 +79,13 @@ class ToDoListController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update($id)
     {
-        //
+        $todolist = ToDoList::find($id);
+        $todolist->status = 0;
+        $todolist->save();
+
+        return redirect('/todoList')->with('pesan2', 'Task has been completed');
     }
 
     /**
@@ -81,6 +96,7 @@ class ToDoListController extends Controller
      */
     public function destroy($id)
     {
-        //
+        ToDoList::destroy($id);
+        return redirect('/todoList')->with('pesan3', 'Deleted successfully');
     }
 }
