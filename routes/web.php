@@ -17,5 +17,5 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BlogController;    
 use App\Http\Controllers\ToDoListController;    
 
-Route::get('/', BlogController::class);
+Route::resource('/', BlogController::class);
 Route::resource('/todoList', ToDoListController::class);
